@@ -1,28 +1,34 @@
 package com.example.amazonqdev.ui.settings
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import com.example.amazonqdev.ui.theme.Spacing
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun SettingsScreen() {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(Spacing.LG),
-        verticalArrangement = Arrangement.spacedBy(Spacing.SM)
+            .background(Color.White)
+            .padding(14.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         item {
             Text(
                 text = "설정",
-                style = MaterialTheme.typography.headlineSmall,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = Spacing.LG)
+                color = Color(0xFF030213),
+                modifier = Modifier.padding(bottom = 14.dp)
             )
         }
         
@@ -34,6 +40,7 @@ fun SettingsScreen() {
                     subtitle = "성별, 연령대 설정",
                     onClick = { }
                 )
+                Divider(color = Color(0xFFE9ECF1))
                 SettingsItem(
                     icon = "🏁",
                     title = "주간 목표",
@@ -51,6 +58,7 @@ fun SettingsScreen() {
                     subtitle = "로컬 데이터 내보내기",
                     onClick = { }
                 )
+                Divider(color = Color(0xFFE9ECF1))
                 SettingsItem(
                     icon = "🗑️",
                     title = "데이터 전체 삭제",
@@ -68,6 +76,7 @@ fun SettingsScreen() {
                     subtitle = "버전 1.0.0",
                     onClick = { }
                 )
+                Divider(color = Color(0xFFE9ECF1))
                 SettingsItem(
                     icon = "❓",
                     title = "도움말",
@@ -87,13 +96,16 @@ fun SettingsSection(
     Column {
         Text(
             text = title,
-            style = MaterialTheme.typography.titleSmall,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(bottom = Spacing.SM)
+            color = Color(0xFF3B82F6),
+            modifier = Modifier.padding(bottom = 8.dp)
         )
         Card(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
             Column {
                 content()
@@ -110,19 +122,32 @@ fun SettingsItem(
     onClick: () -> Unit
 ) {
     ListItem(
-        headlineContent = { Text(title) },
-        supportingContent = { Text(subtitle) },
+        headlineContent = { 
+            Text(
+                text = title,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF030213)
+            )
+        },
+        supportingContent = { 
+            Text(
+                text = subtitle,
+                fontSize = 14.sp,
+                color = Color(0xFF717182)
+            )
+        },
         leadingContent = {
             Text(
                 text = icon,
-                style = MaterialTheme.typography.titleMedium
+                fontSize = 20.sp
             )
         },
         trailingContent = {
             Text(
                 text = ">",
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                fontSize = 16.sp,
+                color = Color(0xFF717182)
             )
         },
         modifier = Modifier.fillMaxWidth()

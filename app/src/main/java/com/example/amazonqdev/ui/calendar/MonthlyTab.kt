@@ -1,148 +1,224 @@
 package com.example.amazonqdev.ui.calendar
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.amazonqdev.ui.theme.ColorTokens
-import com.example.amazonqdev.ui.theme.Spacing
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MonthlyTab() {
     var showBottomSheet by remember { mutableStateOf(false) }
     
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(Spacing.LG)
+            .padding(horizontal = 14.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        // 달력 그리드
-        Card(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Column(
-                modifier = Modifier.padding(Spacing.LG)
+        item {
+            // 달력 카드 - Figma 스펙: width=738dp, height≈556dp
+            Card(
+                modifier = Modifier
+                    .width(738.dp)
+                    .height(406.dp),
+                shape = RoundedCornerShape(13.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                border = BorderStroke(1.dp, Color(0x1A000000))
             ) {
-                Text(
-                    text = "2025년 1월",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = Spacing.MD)
-                )
-                
-                // 요일 헤더
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    listOf("일", "월", "화", "수", "목", "금", "토").forEach { day ->
-                        Text(
-                            text = day,
-                            modifier = Modifier.weight(1f),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-                
-                Spacer(modifier = Modifier.height(Spacing.SM))
-                
-                // 날짜 그리드 (더미 데이터)
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(7),
-                    modifier = Modifier.height(200.dp),
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                Column(
+                    modifier = Modifier.padding(21.dp)
                 ) {
-                    items((1..31).toList()) { day ->
-                        DayCell(
-                            day = day,
-                            status = when {
-                                day % 7 == 0 -> "danger" // 폭음
-                                day % 5 == 0 -> "warning" // 주의
-                                else -> "normal" // 양호
-                            },
-                            onClick = { showBottomSheet = true }
-                        )
+                    // 월 네비게이션 - 상단 57dp 높이 영역
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "◀",
+                                fontSize = 14.sp,
+                                color = Color(0xFF030213)
+                            )
+                            Text(
+                                text = "2025년 9월",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFF030213)
+                            )
+                            Text(
+                                text = "▶",
+                                fontSize = 14.sp,
+                                color = Color(0xFF030213)
+                            )
+                        }
                     }
-                }
-            }
-        }
-        
-        Spacer(modifier = Modifier.height(Spacing.LG))
-        
-        // 선택일 기록 리스트
-        Text(
-            text = "1월 15일 기록",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
-        )
-        
-        Spacer(modifier = Modifier.height(Spacing.SM))
-        
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(Spacing.SM)
-        ) {
-            items(3) { index ->
-                Card(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
+                    
+                    Spacer(modifier = Modifier.height(21.dp))
+                    
+                    // 요일 헤더 - 32dp 높이
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(Spacing.LG),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                            .height(32.dp),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = "🍺",
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Spacer(modifier = Modifier.width(Spacing.SM))
-                            Column {
+                        listOf("일", "월", "화", "수", "목", "금", "토").forEach { day ->
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxHeight(),
+                                contentAlignment = Alignment.Center
+                            ) {
                                 Text(
-                                    text = "맥주",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = FontWeight.Medium
-                                )
-                                Text(
-                                    text = "500ml, 5.0%",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    text = day,
+                                    fontSize = 12.sp,
+                                    color = Color(0xFF717182)
                                 )
                             }
                         }
-                        Text(
-                            text = "2.0잔",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Medium
-                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(7.dp))
+                    
+                    // 날짜 그리드 - 7열 × 6행, 균등 크기
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        repeat(6) { row ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                repeat(7) { col ->
+                                    val day = row * 7 + col + 1
+                                    if (day <= 30) {
+                                        DayCell(
+                                            day = day,
+                                            status = when {
+                                                day == 2 -> "warning"
+                                                day == 3 -> "selected"
+                                                else -> "normal"
+                                            },
+                                            onClick = { showBottomSheet = true },
+                                            modifier = Modifier.weight(1f)
+                                        )
+                                    } else {
+                                        Spacer(modifier = Modifier.weight(1f))
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
         
-        Spacer(modifier = Modifier.height(Spacing.LG))
-        
-        // 요약 보기 버튼
-        OutlinedButton(
-            onClick = { showBottomSheet = true },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("요약 보기")
+        item {
+            // 선택일 기록 카드
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.75.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
+                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(21.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "9월 3일 기록",
+                            fontSize = 14.sp,
+                            color = Color(0xFF030213)
+                        )
+                        
+                        Surface(
+                            onClick = { showBottomSheet = true },
+                            shape = RoundedCornerShape(7.dp),
+                            modifier = Modifier.height(28.dp),
+                            color = Color.Transparent,
+                            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE9ECF1))
+                        ) {
+                            Box(
+                                modifier = Modifier.padding(horizontal = 10.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "📊 요약 보기",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = Color(0xFF030213)
+                                )
+                            }
+                        }
+                    }
+                    
+                    Spacer(modifier = Modifier.height(28.dp))
+                    
+                    // 빈 상태
+                    Text(
+                        text = "🍺",
+                        fontSize = 42.sp,
+                        modifier = Modifier.alpha(0.3f)
+                    )
+                    
+                    Spacer(modifier = Modifier.height(14.dp))
+                    
+                    Text(
+                        text = "기록된 음주가 없습니다",
+                        fontSize = 14.sp,
+                        color = Color(0xFF717182),
+                        textAlign = TextAlign.Center
+                    )
+                    
+                    Spacer(modifier = Modifier.height(14.dp))
+                    
+                    Surface(
+                        onClick = { },
+                        shape = RoundedCornerShape(7.dp),
+                        modifier = Modifier.height(28.dp),
+                        color = Color.Transparent,
+                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE9ECF1))
+                    ) {
+                        Box(
+                            modifier = Modifier.padding(horizontal = 10.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "+ 첫 기록 추가하기",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color(0xFF030213)
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -154,15 +230,16 @@ fun MonthlyTab() {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(Spacing.LG)
+                    .padding(21.dp)
             ) {
                 Text(
-                    text = "1월 15일 요약",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold
+                    text = "9월 3일 요약",
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF030213)
                 )
                 
-                Spacer(modifier = Modifier.height(Spacing.LG))
+                Spacer(modifier = Modifier.height(21.dp))
                 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -171,43 +248,45 @@ fun MonthlyTab() {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             text = "총 음주량",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            fontSize = 12.sp,
+                            color = Color(0xFF717182)
                         )
                         Text(
-                            text = "1500ml",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            text = "0ml",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF030213)
                         )
                     }
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             text = "표준잔수",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            fontSize = 12.sp,
+                            color = Color(0xFF717182)
                         )
                         Text(
-                            text = "6.0잔",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            text = "0잔",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF030213)
                         )
                     }
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
                             text = "상태",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            fontSize = 12.sp,
+                            color = Color(0xFF717182)
                         )
                         Text(
-                            text = "폭음",
-                            style = MaterialTheme.typography.titleMedium,
+                            text = "양호",
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.error
+                            color = Color(0xFF030213)
                         )
                     }
                 }
                 
-                Spacer(modifier = Modifier.height(Spacing.XXL))
+                Spacer(modifier = Modifier.height(42.dp))
             }
         }
     }
@@ -217,26 +296,47 @@ fun MonthlyTab() {
 fun DayCell(
     day: Int,
     status: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val backgroundColor = when (status) {
-        "warning" -> ColorTokens.WarningSoft
-        "danger" -> ColorTokens.DangerSoft
-        else -> MaterialTheme.colorScheme.surface
+        "warning" -> Color(0xFFFEF9C2)
+        "selected" -> Color(0xFF030213)
+        else -> Color(0xFFECECF0)
+    }
+    
+    val textColor = when (status) {
+        "selected" -> Color.White
+        else -> Color(0xFF030213)
     }
     
     Box(
-        modifier = Modifier
-            .size(32.dp)
-            .clip(CircleShape)
-            .background(backgroundColor)
+        modifier = modifier
+            .aspectRatio(1f)
+            .background(backgroundColor, RoundedCornerShape(7.dp))
             .clickable { onClick() },
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = day.toString(),
-            style = MaterialTheme.typography.bodySmall,
-            textAlign = TextAlign.Center
-        )
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = day.toString(),
+                fontSize = 12.sp,
+                color = textColor
+            )
+            
+            if (status == "warning" || status == "selected") {
+                Spacer(modifier = Modifier.height(4.dp))
+                Box(
+                    modifier = Modifier
+                        .size(4.dp)
+                        .background(
+                            if (status == "selected") Color.White else Color(0xFF030213),
+                            CircleShape
+                        )
+                )
+            }
+        }
     }
 }
