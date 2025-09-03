@@ -1,3 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AmazonQDev</string>
+    <string name="app_name">AlcoLook</string>
+    
+    <!-- 하단 탭 -->
+    <string name="tab_home">홈</string>
+    <string name="tab_calendar">캘린더</string>
+    <string name="tab_settings">설정</string>
+    
+    <!-- 홈 화면 -->
+    <string name="camera_preview_placeholder">카메라 미리보기 영역</string>
+    <string name="capture_button">촬영하기</string>
+    <string name="disclaimer">⚠️ 이 앱은 의료 목적이 아니며, 운전 판단에 사용하지 마세요.</string>
+    
+    <!-- 캘린더 화면 -->
+    <string name="drink_records">음주 기록</string>
+    <string name="add_record">기록 추가</string>
+    <string name="monthly">월별</string>
+    <string name="statistics">통계</string>
+    <string name="weekly_summary">주간 요약</string>
+    <string name="monthly_summary">월간 요약</string>
+    <string name="show_summary">요약 보기</string>
+    
+    <!-- 통계 -->
+    <string name="health_index">건강 지수</string>
+    <string name="drink_trend">음주량 트렌드</string>
+    <string name="drink_types_stats">술 종류별 통계</string>
+    <string name="face_analysis_results">얼굴 분석 결과</string>
+    <string name="analysis_count">분석 횟수</string>
+    <string name="average_probability">평균 확률</string>
+    
+    <!-- 설정 -->
+    <string name="settings">설정</string>
+    <string name="personal_info">개인 정보</string>
+    <string name="profile_settings">프로필 설정</string>
+    <string name="weekly_goal">주간 목표</string>
+    <string name="data_management">데이터 관리</string>
+    <string name="data_backup">데이터 백업</string>
+    <string name="delete_all_data">데이터 전체 삭제</string>
+    <string name="app_info">앱 정보</string>
+    <string name="help">도움말</string>
 </resources>
