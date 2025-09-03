@@ -17,10 +17,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.amazonqdev.nav.AppScreen
 import com.example.amazonqdev.ui.calendar.CalendarScreen
+import com.example.amazonqdev.ui.components.FigmaBottomNavigation
 import com.example.amazonqdev.ui.home.HomeScreen
 import com.example.amazonqdev.ui.settings.SettingsScreen
 import com.example.amazonqdev.ui.theme.AlcoLookTheme
-import com.example.amazonqdev.ui.theme.Elevation
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,32 +43,18 @@ fun AlcoLookApp() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            NavigationBar(
-                containerColor = MaterialTheme.colorScheme.surface,
-                tonalElevation = Elevation.BottomNav
-            ) {
-                AppScreen.entries.forEach { screen ->
-                    NavigationBarItem(
-                        icon = { 
-                            Text(
-                                text = screen.icon,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                        },
-                        label = { Text(screen.title) },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+            FigmaBottomNavigation(
+                currentRoute = currentDestination?.route,
+                onNavigate = { route ->
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
                         }
-                    )
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 }
-            }
+            )
         }
     ) { innerPadding ->
         NavHost(
