@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 온디바이스 로컬 처리 전용: 모든 네트워크 통신 차단 -->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">*</domain>
+    </domain-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- 네트워크 통신 완전 차단 -->
+        </trust-anchors>
+    </base-config>
+</network-security-config>
