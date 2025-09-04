@@ -1,11 +1,12 @@
 package com.example.amazonqdev.ui.settings
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,6 +16,11 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun SettingsScreen() {
+    var selectedGender by remember { mutableStateOf("") }
+    var selectedAge by remember { mutableStateOf("") }
+    var selectedGoal by remember { mutableStateOf("") }
+    var selectedTheme by remember { mutableStateOf("") }
+    
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -34,18 +40,36 @@ fun SettingsScreen() {
         
         item {
             SettingsSection(title = "개인 정보") {
-                SettingsItem(
+                DropdownSettingsItem(
                     icon = "👤",
-                    title = "프로필 설정",
-                    subtitle = "성별, 연령대 설정",
-                    onClick = { }
+                    title = "성별",
+                    options = listOf("남성", "여성"),
+                    selectedValue = selectedGender,
+                    onValueChange = { selectedGender = it }
                 )
                 Divider(color = Color(0xFFE9ECF1))
-                SettingsItem(
+                DropdownSettingsItem(
+                    icon = "🎂",
+                    title = "연령대",
+                    options = listOf("20대", "30대", "40대", "50대", "60~64세", "65세 이상"),
+                    selectedValue = selectedAge,
+                    onValueChange = { selectedAge = it }
+                )
+                Divider(color = Color(0xFFE9ECF1))
+                DropdownSettingsItem(
                     icon = "🏁",
                     title = "주간 목표",
-                    subtitle = "권장 음주량 설정",
-                    onClick = { }
+                    options = listOf("7잔(권장)", "14잔(저위험)", "21잔(최대)"),
+                    selectedValue = selectedGoal,
+                    onValueChange = { selectedGoal = it }
+                )
+                Divider(color = Color(0xFFE9ECF1))
+                DropdownSettingsItem(
+                    icon = "🎨",
+                    title = "테마 설정",
+                    options = listOf("시스템", "다크", "라이트"),
+                    selectedValue = selectedTheme,
+                    onValueChange = { selectedTheme = it }
                 )
             }
         }
@@ -149,6 +173,88 @@ fun SettingsItem(
                 fontSize = 16.sp,
                 color = Color(0xFF717182)
             )
+        },
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+fun DropdownSettingsItem(
+    icon: String,
+    title: String,
+    options: List<String>,
+    selectedValue: String,
+    onValueChange: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    
+    ListItem(
+        headlineContent = { 
+            Text(
+                text = title,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF030213)
+            )
+        },
+        leadingContent = {
+            Text(
+                text = icon,
+                fontSize = 20.sp
+            )
+        },
+        trailingContent = {
+            Box {
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = Color(0xFFF8F9FA),
+                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .clickable { expanded = true }
+                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                        .defaultMinSize(minWidth = 60.dp, minHeight = 28.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = selectedValue.ifEmpty { "선택" },
+                            fontSize = 12.sp,
+                            color = if (selectedValue.isEmpty()) Color(0xFF717182) else Color(0xFF030213)
+                        )
+                        Text(
+                            text = "▼",
+                            fontSize = 8.sp,
+                            color = Color(0xFF717182)
+                        )
+                    }
+                }
+                
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    options.forEach { option ->
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = option,
+                                    fontSize = 12.sp,
+                                    color = Color(0xFF030213)
+                                )
+                            },
+                            onClick = {
+                                onValueChange(option)
+                                expanded = false
+                            },
+                            modifier = Modifier.height(36.dp)
+                        )
+                    }
+                }
+            }
         },
         modifier = Modifier.fillMaxWidth()
     )
