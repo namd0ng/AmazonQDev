@@ -7,20 +7,25 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.amazonqdev.data.DataExportManager
 import com.example.amazonqdev.data.DataResetManager
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen() {
     var selectedGender by remember { mutableStateOf("") }
@@ -28,6 +33,8 @@ fun SettingsScreen() {
     var selectedGoal by remember { mutableStateOf("") }
     var selectedTheme by remember { mutableStateOf("") }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showAppInfoDialog by remember { mutableStateOf(false) }
+    var showHelpSheet by remember { mutableStateOf(false) }
     
     val context = LocalContext.current
     val dataExportManager = remember { DataExportManager() }
@@ -133,14 +140,14 @@ fun SettingsScreen() {
                     icon = "ℹ️",
                     title = "앱 정보",
                     subtitle = "버전 1.0.0",
-                    onClick = { }
+                    onClick = { showAppInfoDialog = true }
                 )
                 Divider(color = Color(0xFFE9ECF1))
                 SettingsItem(
                     icon = "❓",
                     title = "도움말",
                     subtitle = "사용법 및 면책 사항",
-                    onClick = { }
+                    onClick = { showHelpSheet = true }
                 )
             }
         }
@@ -190,6 +197,118 @@ fun SettingsScreen() {
                     onClick = { showDeleteDialog = false }
                 ) {
                     Text("취소")
+                }
+            }
+        )
+    }
+    
+    if (showAppInfoDialog) {
+        AlertDialog(
+            onDismissRequest = { showAppInfoDialog = false },
+            title = {
+                Text(
+                    text = "AlcoLook",
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            text = {
+                Column {
+                    Text(
+                        text = "버전: 1.0.0",
+                        fontSize = 14.sp,
+                        color = Color(0xFF717182),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "모든 데이터는 기기 내에 저장됩니다. 클라우드 업로드/계정 동기화 기능이 없습니다.",
+                        fontSize = 14.sp,
+                        color = Color(0xFF030213),
+                        lineHeight = 20.sp
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = "오픈소스 라이선스를 준수하여 제작되었습니다.",
+                        fontSize = 12.sp,
+                        color = Color(0xFF717182)
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = { showAppInfoDialog = false }
+                ) {
+                    Text("확인")
+                }
+            }
+        )
+    }
+    
+    if (showHelpSheet) {
+        AlertDialog(
+            onDismissRequest = { showHelpSheet = false },
+            title = {
+                Text(
+                    text = "도움말 및 면책 사항",
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 400.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(
+                        text = "사용 안내",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF3B82F6),
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                    Text(
+                        text = "분석 결과는 참고 지표입니다.",
+                        fontSize = 12.sp,
+                        color = Color(0xFF030213),
+                        modifier = Modifier.padding(bottom = 12.dp)
+                    )
+                    
+                    Text(
+                        text = "법적 고지 및 면책",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF3B82F6),
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
+                    
+                    val disclaimerText = """
+• 의료기기/진단 도구가 아닙니다
+• 혈중알코올농도 측정기를 대체하지 않습니다
+• 운전 가능 여부 판단에 절대 사용 금지
+• 결과는 환경에 따라 부정확할 수 있습니다
+• 온디바이스 동작, 서버 전송 없음
+• 응급상황 시 즉시 의료기관 이용
+
+데이터 관리: 설정 > 데이터 관리
+                    """.trimIndent()
+                    
+                    Text(
+                        text = disclaimerText,
+                        fontSize = 12.sp,
+                        color = Color(0xFF030213),
+                        lineHeight = 16.sp
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = { showHelpSheet = false }
+                ) {
+                    Text("확인")
                 }
             }
         )
