@@ -3,6 +3,7 @@ package com.example.amazonqdev.ui.settings
 import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -69,9 +70,9 @@ fun SettingsScreen() {
         item {
             Text(
                 text = "설정",
-                fontSize = 20.sp,
+                fontSize = 20.8.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF030213),
+                color = Color(0xFF1A1C20),
                 modifier = Modifier.padding(bottom = 14.dp)
             )
         }
@@ -85,7 +86,6 @@ fun SettingsScreen() {
                     selectedValue = selectedGender,
                     onValueChange = { selectedGender = it }
                 )
-                Divider(color = Color(0xFFE9ECF1))
                 DropdownSettingsItem(
                     icon = "🎂",
                     title = "연령대",
@@ -93,7 +93,6 @@ fun SettingsScreen() {
                     selectedValue = selectedAge,
                     onValueChange = { selectedAge = it }
                 )
-                Divider(color = Color(0xFFE9ECF1))
                 DropdownSettingsItem(
                     icon = "🏁",
                     title = "주간 목표",
@@ -101,7 +100,6 @@ fun SettingsScreen() {
                     selectedValue = selectedGoal,
                     onValueChange = { selectedGoal = it }
                 )
-                Divider(color = Color(0xFFE9ECF1))
                 DropdownSettingsItem(
                     icon = "🎨",
                     title = "테마 설정",
@@ -122,7 +120,6 @@ fun SettingsScreen() {
                         exportLauncher.launch(dataExportManager.createExportIntent())
                     }
                 )
-                Divider(color = Color(0xFFE9ECF1))
                 SettingsItem(
                     icon = "🗑️",
                     title = "데이터 전체 삭제",
@@ -142,7 +139,6 @@ fun SettingsScreen() {
                     subtitle = "버전 1.0.0",
                     onClick = { showAppInfoDialog = true }
                 )
-                Divider(color = Color(0xFFE9ECF1))
                 SettingsItem(
                     icon = "❓",
                     title = "도움말",
@@ -286,12 +282,12 @@ fun SettingsScreen() {
                     )
                     
                     val disclaimerText = """
-• 의료기기/진단 도구가 아닙니다
-• 혈중알코올농도 측정기를 대체하지 않습니다
-• 운전 가능 여부 판단에 절대 사용 금지
-• 결과는 환경에 따라 부정확할 수 있습니다
-• 온디바이스 동작, 서버 전송 없음
-• 응급상황 시 즉시 의료기관 이용
+• 이 앱은 의료기기/진단 도구가 아닙니다. 질병의 진단·치료·예방 목적에 사용할 수 없습니다.
+• 결과는 혈중알코올농도(BAC) 측정기를 대체하지 않습니다.
+• 운전 가능 여부 판단에 절대 사용하지 마세요.
+• 결과는 조명·각도·표정 등 환경에 따라 부정확할 수 있습니다. 오판 책임은 사용자에게 있습니다.
+• 이 앱은 온디바이스로 동작하며, 기본적으로 서버 전송을 하지 않습니다. 설정에서 데이터 전체 삭제가 가능합니다.
+• 응급 상황(알코올 중독 의심, 의식 저하 등)에서는 즉시 지역 응급번호로 연락하거나 의료기관을 이용하세요.
 
 데이터 관리: 설정 > 데이터 관리
                     """.trimIndent()
@@ -332,16 +328,19 @@ fun SettingsSection(
             text = title,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            color = Color(0xFF3B82F6),
+            color = Color(0xFF6B7280),
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Card(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFFFFFFF)),
+            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+            border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFE9ECF1))
         ) {
-            Column {
+            Column(
+                modifier = Modifier.padding(vertical = 8.dp)
+            ) {
                 content()
             }
         }
@@ -359,29 +358,29 @@ fun SettingsItem(
         headlineContent = { 
             Text(
                 text = title,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color(0xFF030213)
+                color = Color(0xFF1A1C20)
             )
         },
         supportingContent = { 
             Text(
                 text = subtitle,
-                fontSize = 14.sp,
-                color = Color(0xFF717182)
+                fontSize = 12.sp,
+                color = Color(0xFF6B7280)
             )
         },
         leadingContent = {
             Text(
                 text = icon,
-                fontSize = 20.sp
+                fontSize = 18.sp
             )
         },
         trailingContent = {
             Text(
-                text = ">",
-                fontSize = 16.sp,
-                color = Color(0xFF717182)
+                text = "▶",
+                fontSize = 12.sp,
+                color = Color(0xFF6B7280)
             )
         },
         modifier = Modifier
@@ -404,15 +403,15 @@ fun DropdownSettingsItem(
         headlineContent = { 
             Text(
                 text = title,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
-                color = Color(0xFF030213)
+                color = Color(0xFF1A1C20)
             )
         },
         leadingContent = {
             Text(
                 text = icon,
-                fontSize = 20.sp
+                fontSize = 18.sp
             )
         },
         trailingContent = {
@@ -420,12 +419,12 @@ fun DropdownSettingsItem(
                 Box(
                     modifier = Modifier
                         .background(
-                            color = Color(0xFFF8F9FA),
-                            shape = RoundedCornerShape(12.dp)
+                            color = Color(0xFFECECF0),
+                            shape = RoundedCornerShape(12.75.dp)
                         )
                         .clickable { expanded = true }
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                        .defaultMinSize(minWidth = 60.dp, minHeight = 28.dp),
+                        .padding(horizontal = 10.dp, vertical = 6.dp)
+                        .defaultMinSize(minWidth = 60.dp, minHeight = 25.5.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Row(
@@ -434,13 +433,14 @@ fun DropdownSettingsItem(
                     ) {
                         Text(
                             text = selectedValue.ifEmpty { "선택" },
-                            fontSize = 12.sp,
-                            color = if (selectedValue.isEmpty()) Color(0xFF717182) else Color(0xFF030213)
+                            fontSize = 12.3.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = if (selectedValue.isEmpty()) Color(0xFF6B7280) else Color(0xFF1A1C20)
                         )
                         Text(
                             text = "▼",
                             fontSize = 8.sp,
-                            color = Color(0xFF717182)
+                            color = Color(0xFF6B7280)
                         )
                     }
                 }
@@ -454,8 +454,8 @@ fun DropdownSettingsItem(
                             text = {
                                 Text(
                                     text = option,
-                                    fontSize = 12.sp,
-                                    color = Color(0xFF030213)
+                                    fontSize = 12.3.sp,
+                                    color = Color(0xFF1A1C20)
                                 )
                             },
                             onClick = {
