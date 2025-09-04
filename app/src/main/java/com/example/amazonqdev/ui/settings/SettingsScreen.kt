@@ -1,5 +1,8 @@
 package com.example.amazonqdev.ui.settings
 
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,9 +13,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.amazonqdev.data.DataExportManager
+import com.example.amazonqdev.data.DataResetManager
+import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsScreen() {
@@ -20,6 +27,30 @@ fun SettingsScreen() {
     var selectedAge by remember { mutableStateOf("") }
     var selectedGoal by remember { mutableStateOf("") }
     var selectedTheme by remember { mutableStateOf("") }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    
+    val context = LocalContext.current
+    val dataExportManager = remember { DataExportManager() }
+    val dataResetManager = remember { DataResetManager(context) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    
+    val exportLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                val content = dataExportManager.generateBackupData(selectedGender, selectedAge, selectedGoal, selectedTheme)
+                val success = dataExportManager.writeToUri(context, uri, content)
+                
+                coroutineScope.launch {
+                    snackbarHostState.showSnackbar(
+                        if (success) "백업이 완료되었습니다" else "백업에 실패했습니다"
+                    )
+                }
+            }
+        }
+    }
     
     LazyColumn(
         modifier = Modifier
@@ -80,14 +111,18 @@ fun SettingsScreen() {
                     icon = "💾",
                     title = "데이터 백업",
                     subtitle = "로컬 데이터 내보내기",
-                    onClick = { }
+                    onClick = {
+                        exportLauncher.launch(dataExportManager.createExportIntent())
+                    }
                 )
                 Divider(color = Color(0xFFE9ECF1))
                 SettingsItem(
                     icon = "🗑️",
                     title = "데이터 전체 삭제",
                     subtitle = "모든 기록 삭제",
-                    onClick = { }
+                    onClick = {
+                        showDeleteDialog = true
+                    }
                 )
             }
         }
@@ -109,6 +144,62 @@ fun SettingsScreen() {
                 )
             }
         }
+    }
+    
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = {
+                Text(
+                    text = "데이터 전체 삭제",
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    text = "모든 기록과 설정이 영구적으로 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
+                    color = Color(0xFF717182)
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteDialog = false
+                        val success = dataResetManager.resetAllData()
+                        
+                        selectedGender = ""
+                        selectedAge = ""
+                        selectedGoal = ""
+                        selectedTheme = ""
+                        
+                        coroutineScope.launch {
+                            snackbarHostState.showSnackbar(
+                                if (success) "모든 데이터가 삭제되었습니다" else "삭제에 실패했습니다"
+                            )
+                        }
+                    },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = Color(0xFFDC2626)
+                    )
+                ) {
+                    Text("삭제")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showDeleteDialog = false }
+                ) {
+                    Text("취소")
+                }
+            }
+        )
+    }
+    
+    Box(modifier = Modifier.fillMaxSize()) {
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 
@@ -174,7 +265,9 @@ fun SettingsItem(
                 color = Color(0xFF717182)
             )
         },
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
     )
 }
 
